@@ -10,35 +10,43 @@ class AES {
   int Nr = 10;// 12, or 14;
   int Nk = 4; //, 6, or 8
 
-  void SubBytes(){
+  void SubBytes(byte[][] state){
     /*
     for each byte in the array, use its value as an index into a fixed 256-element lookup table, and replace its value in the state by the byte value stored at that location in the table. You can find the table and the inverse table on the web.
     */
 
   }
 
-  void ShiftRows(){
+  void ShiftRows(byte[][] state){
 
   }
 
-  void MixColumns(){
+  void MixColumns(byte[][] state){
 
   }
 
   void AddRoundKey(byte[][] state, byte[] w, int start, int end ){
     // XOR the state with a 128-bit round key derived from the original key K by a recursive process.
+    int count = 0;
     for(int i = start; i < end; i++){
-      for(int j = 0; j < 4; j++)
-        state[j][i] ^= w[j];
+      for(int j = 0; j < 3; j++){
+        System.out.println(i +" " + j);
+        state[i][j] ^= w[count];
+        count++;
+      }
     }
   }
 
   void Cipher(byte[] in, byte out[], byte[] w){
     byte[][] state = new byte[4][Nb];
-    state[0] = in;
-    state[1] = in;
-    state[2] = in;
-    state[3] = in;
+    int count = 0;
+
+    for (int i = 0; i < 3; i++){
+      for (int j = 0; j < 3; j++){
+        state[i][j] = in[count];
+        count++;
+      }
+    }
 
     AddRoundKey(state, w, 0, Nb - 1);
 
@@ -53,8 +61,8 @@ class AES {
     // SubBytes(state);
     // ShiftRows(state);
     // AddRoundKey(state, w, Nr*Nb, (Nr+1)*Nb - 1);
-    //
-    // out = state;
+
+    //out = state;
   }
 
   void encrypt() throws IOException {

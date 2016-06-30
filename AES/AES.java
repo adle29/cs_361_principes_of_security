@@ -22,9 +22,21 @@ class AES {
   }
 
   void MixColumns(byte[][] state){
-
+  	byte[] row = byte[0];
   }
 
+  byte[][] matrixMutiply(byte[][] state){
+  	int sum = 0; 
+  	byte [][] newState = new byte[4][4];
+  	for(int i = 0; i < 4; i++)
+  		for(int j = 0; j < 4; j++){
+  			for(int k  0; k < 4; k++){
+  				sum += (int)galois[i][k] * (int)state[k][j]
+  			}
+  			newState[i][j] = (byte) sum;
+  			sum =0;
+		}
+  }
   void AddRoundKey(byte[][] state, byte[] w, int start, int end ){
     // XOR the state with a 128-bit round key derived from the original key K by a recursive process.
     int count = 0;

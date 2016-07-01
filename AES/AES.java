@@ -43,25 +43,18 @@ class AES {
 			0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61, 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6,
 			0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
 
-  void SubBytes(byte[][] state){
-    /*
-    for each byte in the array, use its value as an index into a fixed 256-element
-    lookup table, and replace its value in the state by the byte value stored at that
-    location in the table. You can find the table and the inverse table on the web.
-    */
-    //to hex to string, split
-    for(int i = 0; i < 3; i++){
-      for(int j = 0; j < 3; j++){
+  void SubBytes(byte[][] state) {
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
         int temp = state[i][j];
-        String hex = Integer.toHexString(temp);
-        String[] values = hex.split("");
-        int x =  Integer.parseInt(values[0], 16);
-        int y = Integer.parseInt(values[1], 16);
-        char r = sbox[x+y];
-        state[i][j] = (byte)Character.getNumericValue(r);
+        String hex = String.format("%02X", temp);
+        hex = (hex.length() > 2) ? hex.substring(hex.length() - 2) : hex;
+        int x = Integer.parseInt(hex.substring(0, 1), 16);
+        int y = Integer.parseInt(hex.substring(1), 16);
+//        System.out.println(hex + " " + x + " " + y);
+        state[i][j] = (byte) sbox[(x * 16) + (y)];
       }
     }
-
   }
 
   void ShiftRows(byte[][] state){

@@ -142,9 +142,8 @@ class AES {
     //out = state;
   }
 
-  byte[] Rcon(int i){
-    byte[] newArray = {(byte)Math.pow(2,i-1),0,0,0};
-    return newArray;
+  byte Rcon(int i){
+    return (byte)Math.pow(2,i-1);
   }
 
   byte[] RotWord(byte[] x){
@@ -157,37 +156,43 @@ class AES {
     return x;
   }
 
-  byte[] SubWord(byte[] w){
-    for (int i = 0; i < 3; i++){
-      int temp = w[i];
-      String hex = String.format("%02X", temp);//Integer.toHexString(temp);
-      String[] values = hex.split("");
-      int x =  Integer.parseInt(values[0], 16);
-      int y = Integer.parseInt(values[1], 16);
-      char r = sbox[x+y];
-      w[i] = (byte)Character.getNumericValue(r);
-    }
-
-    return w;
+  byte SubWord(byte temp){
+    String hex = String.format("%02X", temp);//Integer.toHexString(temp);
+    String[] values = hex.split("");
+    int x =  Integer.parseInt(values[0], 16);
+    int y = Integer.parseInt(values[1], 16);
+    int s = 16*x+y;
+    char r = sbox[s];
+    return (byte)r;
   }
 
-  void KeyExpansion(byte[][] K, byte[][] W) {
-    //byte K[4][Nk], byte W[4][Nb(Nr+1)]
-    // for(j = 0; j < Nk; j++)
-    //   for(i = 0; i < 4; i++)
-    //     W[i][j] = K[i][j];
-    //
-    // for(j = Nk; < Nb(Nr + 1); j++)
-    //   if (j%Nk == 0) {
-    //       W[0][j] = W[0][j — Nk] ^ SubWord(W[0][j — Nk]) ^ rcon[j/Nk];
-    //       for(i = 1; i < 4; i++)
-    //         W[i][j] =  W[i][j - Nk] ^ SubWord(W[0][i + 1%j][j - 1]);
-    //   }
-    //   // else if (j % Nk == 4) {
-    //   //   for = o; i < 4.; = Nk] (c) stwtillj :01 ;
-    //   // else
-    //   //   for(i = 0; i < 4; i++) WHIM 7= — N ;
-    // }
+  byte[][] KeyExpansion(byte[][] K) {
+    byte[][] W = new byte[4][Nb*(Nr+1)];
+    int j;
+    int i;
+
+    for(j = 0; j < Nk; j++){
+      for(i = 0; i < 4; i++)
+        W[j][i] = K[j][i];
+    }
+
+    for(j = Nk; j < Nb*(Nr + 1); j++){
+      if (j%Nk == 0) {
+          W[0][j] = (byte)(W[0][j - Nk] ^ SubWord(W[1][j - 1]) ^ Rcon(j/Nk));
+          for(i = 1; i < 4; i++)
+            W[i][j] =  (byte)(W[i][j - Nk] ^ SubWord(W[(i + 1)%4][j - 1]));
+      }
+      else if (j % Nk == 4 && Nk > 6) {
+        for(i = 0; i < 4; i++)
+          W[i][j] =  (byte)(W[i][j - Nk] ^ SubWord(W[i][j - 1]));
+      }
+      else {
+        for(i = 0; i < 4; i++)
+          W[i][j] =  (byte)(W[i][j - Nk] ^ W[i][j - 1]);
+      }
+    }
+
+    return W;
   }
 
 
@@ -252,26 +257,35 @@ class AES {
       /*The expanded key. The initial key is of size 4*Nk bytes (see table earlier), and this
         is expanded to the array w of 4*Nb*(Nr+1) = 16*(Nr+1) bytes for input to the encryption
         algorithm*/
-      byte[] w = new byte[4*Nk];
+      byte[][] w = new byte[4][Nk];
       int j = 0;
+      int count = 0;
 
       //EXPANDING THE KEY
-      for(int i = 0; i < 32; i+=2){
-        w[i/2] = (byte)Integer.parseInt( key.substring(i,i+2),16 );
+      for(int i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++){
+          w[i][j] = (byte)Integer.parseInt( key.substring(count, count+2),16 );
+          count += 2;
+        }
       }
 
+
       System.out.println("Key:");
-      System.out.println(Arrays.toString(w));
+      System.out.println(Arrays.deepToString(w));
 
       System.out.println("Expanded Key:");
-      // w = keyExpansion(w);
-      // for (j = 0; j < w.length; j++) {
-      //   if ( j != 0 && j%4 ==0)
-      //     System.out.println("" );
-      //   System.out.print( String.format("%02X",w[j]) + " " );
-      // }
-      //System.out.println(Arrays.toString(w));
-    //  System.exit(1);
+      byte[][] exW  = KeyExpansion(w);
+      for (j = 0; j < 4; j++) {
+        for (int i = 0; i < Nb*(Nr+1); i++) {
+          // if ( i != 0 && i%4 == 0)
+          //   System.out.println("" );
+          System.out.print( String.format("%02X",exW[j][i]) + " " );
+        }
+        System.out.println("" );
+      }
+      // System.out.println("");
+      // System.out.println(Arrays.deepToString(exW));
+      System.exit(1);
 
       //FROM HEX TO INT, BYTES
       for (int i = 0; i < line.length(); i++){
@@ -279,7 +293,7 @@ class AES {
       }
 
       //Apply the AES algorithm to encrypt the string as stored
-      Cipher(in, out, w);
+      //Cipher(in, out, exW);
 
       //write out the ciphertext in Hex notation to the output file
 

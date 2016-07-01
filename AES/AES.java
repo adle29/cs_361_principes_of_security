@@ -188,10 +188,11 @@ class AES {
 
   byte[] RotWord(byte[] x){
     byte[] row = x;
+    byte temp = x[0];
     x[0] = row[1];
     x[1] = row[2];
     x[2] = row[3];
-    x[3] = row[0];
+    x[3] = temp;
 
     return x;
   }
@@ -202,7 +203,7 @@ class AES {
     hex = (hex.length() > 2) ? hex.substring(hex.length() - 2) : "0".concat(hex);
     int x = Integer.parseInt(hex.substring(0,1), 16);
     int y = Integer.parseInt(hex.substring(1), 16);
-    
+
     return (byte)sbox[16 * x + y];
   }
 

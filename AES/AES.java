@@ -82,15 +82,15 @@ class AES {
 
   void MixColumns(byte[][] test){
   	for (int j = 0; j < 4; j++) {
-		byte i[] = { test[0][j], test[1][j], test[2][j], test[3][j] };
-		test[0][j] = (byte) (mult(2, i[0]) ^ mult(3, i[1]) ^ mult(1, i[2]) ^ mult(1, i[3]));
-		test[1][j] = (byte) (mult(1, i[0]) ^ mult(2, i[1]) ^ mult(3, i[2]) ^ mult(1, i[3]));
-		test[2][j] = (byte) (mult(1, i[0]) ^ mult(1, i[1]) ^ mult(2, i[2]) ^ mult(3, i[3]));
-		test[3][j] = (byte) (mult(3, i[0]) ^ mult(1, i[1]) ^ mult(1, i[2]) ^ mult(2, i[3]));
-	}
+  		byte i[] = { test[0][j], test[1][j], test[2][j], test[3][j] };
+  		test[0][j] = (byte) (mult(2, i[0]) ^ mult(3, i[1]) ^ mult(1, i[2]) ^ mult(1, i[3]));
+  		test[1][j] = (byte) (mult(1, i[0]) ^ mult(2, i[1]) ^ mult(3, i[2]) ^ mult(1, i[3]));
+  		test[2][j] = (byte) (mult(1, i[0]) ^ mult(1, i[1]) ^ mult(2, i[2]) ^ mult(3, i[3]));
+  		test[3][j] = (byte) (mult(3, i[0]) ^ mult(1, i[1]) ^ mult(1, i[2]) ^ mult(2, i[3]));
+    }
   }
 
-  	byte mult(int x, byte b) {
+  byte mult(int x, byte b) {
 		byte y = b;
 		if (x == 1) {
 			return y;
@@ -171,23 +171,23 @@ class AES {
     return w;
   }
 
-  void KeyExpansion(byte K[4][Nk], byte W[4][Nb(Nr+1)]) {
-
-    for(j = 0; j < Nk; j++)
-      for(i = 0; i < 4; i++)
-        W[i][j] = K[i][j];
-
-    for(j = Nk; < Nb(Nr + 1); j++)
-      if (j%Nk == 0) {
-          W[0][j] = W[0][j — Nk] ^ SubWord(W[0][j — Nk]) ^ rcon[j/Nk];
-          for(i = 1; i < 4; i++)
-            W[i][j] =  W[i][j - Nk] ^ SubWord(W[0][i + 1%j][j - 1]);
-      }
-      // else if (j % Nk == 4) {
-      //   for = o; i < 4.; = Nk] (c) stwtillj :01 ;
-      // else
-      //   for(i = 0; i < 4; i++) WHIM 7= — N ;
-    }
+  void KeyExpansion(byte[][] K, byte[][] W) {
+    //byte K[4][Nk], byte W[4][Nb(Nr+1)]
+    // for(j = 0; j < Nk; j++)
+    //   for(i = 0; i < 4; i++)
+    //     W[i][j] = K[i][j];
+    //
+    // for(j = Nk; < Nb(Nr + 1); j++)
+    //   if (j%Nk == 0) {
+    //       W[0][j] = W[0][j — Nk] ^ SubWord(W[0][j — Nk]) ^ rcon[j/Nk];
+    //       for(i = 1; i < 4; i++)
+    //         W[i][j] =  W[i][j - Nk] ^ SubWord(W[0][i + 1%j][j - 1]);
+    //   }
+    //   // else if (j % Nk == 4) {
+    //   //   for = o; i < 4.; = Nk] (c) stwtillj :01 ;
+    //   // else
+    //   //   for(i = 0; i < 4; i++) WHIM 7= — N ;
+    // }
   }
 
 
@@ -264,14 +264,14 @@ class AES {
       System.out.println(Arrays.toString(w));
 
       System.out.println("Expanded Key:");
-      w = keyExpansion(w);
-      for (j = 0; j < w.length; j++) {
-        if ( j != 0 && j%4 ==0)
-          System.out.println("" );
-        System.out.print( String.format("%02X",w[j]) + " " );
-      }
+      // w = keyExpansion(w);
+      // for (j = 0; j < w.length; j++) {
+      //   if ( j != 0 && j%4 ==0)
+      //     System.out.println("" );
+      //   System.out.print( String.format("%02X",w[j]) + " " );
+      // }
       //System.out.println(Arrays.toString(w));
-      System.exit(1);
+    //  System.exit(1);
 
       //FROM HEX TO INT, BYTES
       for (int i = 0; i < line.length(); i++){

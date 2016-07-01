@@ -1,0 +1,90 @@
+Encryption with Key Size: 4 Rounds: 10
+Key:
+[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+Expanded Key:
+00 00 00 00 62 62 62 62 9B F9 9B F9 90 69 F2 0B EE 87 75 7E 7F F8 8D F3 EC 14 99 6A 21 35 AC C6 0E 3B 97 51 AA 91 06 57 99 08 0E 59 
+00 00 00 00 63 63 63 63 98 FB 98 FB 97 6C F4 0F 06 6A 9E 91 2E 44 DA 4B 61 25 FF B4 75 50 AF 1B F9 A9 06 1D D4 7D 7B 66 EF 92 E9 8F 
+00 00 00 00 63 63 63 63 98 FB 98 FB 34 CF 57 AC DA 15 42 EE 2B 3E 7C 92 4B 75 09 9B 17 62 6B F0 03 61 0A FA D8 B9 B3 49 5B E2 51 18 
+00 00 00 00 63 63 63 63 C9 AA C9 AA 50 FA 33 99 7B 81 B2 2B 88 09 BB 90 85 8C 37 A7 87 0B 3C 9B 33 38 04 9F E2 DA DE 41 B9 63 BD FC 
+
+
+
+
+
+63636363636363636363636363636363
+ 
+63636363636363636363636363636363
+After addRoundKey(1): 
+
+After subBytes: 
+7c6363637c6363637c6363637c636363
+After shiftRows: 
+7c6363637c6363637c6363637c636363
+After mixColumns: 
+5d7c7c425d7c7c425d7c7c425d7c7c42
+After addRoundKey(2): 
+
+After subBytes: 
+b469693d4917179bb469693d4917179b
+After shiftRows: 
+b417699b4969173db417699b4969173d
+After mixColumns: 
+b8bac794039f49dfb8bac794039f49df
+After addRoundKey(3): 
+
+After subBytes: 
+34d80d1c020d443fd62f605c3060d95a
+After shiftRows: 
+340d605a022fd91cd6600d3f30d8445c
+After mixColumns: 
+45d41785b030a0c8253eed720b0b8474
+After addRoundKey(4): 
+
+After subBytes: 
+62b5bdbb9abed53b53e079ba9db802cf
+After shiftRows: 
+62be79cf9ae002bb53b8bd3b9db5d5ba
+After mixColumns: 
+ab4164e4adfca83af3dfc7868a324cb3
+After addRoundKey(5): 
+
+After subBytes: 
+48a88450fc6c90c3f36bea27b6b61d26
+After shiftRows: 
+486cea26fc6b1d50f3b684c3b6a89027
+After mixColumns: 
+e8938112135d5dc97bd008a123714cb7
+After addRoundKey(6): 
+
+After subBytes: 
+f2897488c5bc346e98157c903ba60eca
+After shiftRows: 
+f2bc7ccac5150e8898a6746e3b893490
+After mixColumns: 
+96dff34228754f44c03d64bd52fe71cb
+After addRoundKey(7): 
+
+After subBytes: 
+a9ac69a6a43fd884504f760c22d90c53
+After shiftRows: 
+a93f7653a44f0ca650d9698422acd80c
+After mixColumns: 
+2d1e8f0f288802e33dc6cc537f1e310a
+After addRoundKey(8): 
+
+After subBytes: 
+269464eb7dfdfbb9acbab45b317b1f2a
+After shiftRows: 
+26fdb42a7dba1febac7b64b93194fb5b
+After mixColumns: 
+
+After addRoundKey(9): 
+
+After subBytes: 
+43bbab2ad6063396591810a023a5ce1f
+After shiftRows: 
+4306101fd618ce2a59a5ab9623bb33a0
+After mixColumns: 
+836044ed7b8537e37b7810d203bb05b6
+After addRoundKey(10): 
+1a8f1f547317d5807591416f5a341d4a

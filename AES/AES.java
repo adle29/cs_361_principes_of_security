@@ -187,7 +187,6 @@ class AES {
   }
 
   byte SubWord(byte temp){
-    int temp = state[i][j];
     String hex = Integer.toHexString(temp);
     hex = (hex.length() > 2) ? hex.substring(hex.length() - 2) : "0".concat(hex);
     int x = Integer.parseInt(hex.substring(0,1), 16);

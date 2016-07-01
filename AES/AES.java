@@ -80,9 +80,27 @@ class AES {
     }
   }
 
-  void MixColumns(byte[][] state){
-
+  void MixColumns(byte[][] test){
+  	for (int j = 0; j < 4; j++) {
+		byte i[] = { test[0][j], test[1][j], test[2][j], test[3][j] };
+		test[0][j] = (byte) (mult(2, i[0]) ^ mult(3, i[1]) ^ mult(1, i[2]) ^ mult(1, i[3]));
+		test[1][j] = (byte) (mult(1, i[0]) ^ mult(2, i[1]) ^ mult(3, i[2]) ^ mult(1, i[3]));
+		test[2][j] = (byte) (mult(1, i[0]) ^ mult(1, i[1]) ^ mult(2, i[2]) ^ mult(3, i[3]));
+		test[3][j] = (byte) (mult(3, i[0]) ^ mult(1, i[1]) ^ mult(1, i[2]) ^ mult(2, i[3]));
+	}
   }
+
+  	byte mult(int x, byte b) {
+		byte y = b;
+		if (x == 1) {
+			return y;
+		}
+		byte original = y;
+		byte cond = (byte) ((y < 1) ? 27 : 0);
+		y <<= 1;
+		y = (byte) (y ^ cond);
+		return (byte) ((x == 2) ? y : (y ^ original));
+	}
 
   void AddRoundKey(byte[][] state, byte[] w, int start, int end ){
     // XOR the state with a 128-bit round key derived from the original key K by a recursive process.

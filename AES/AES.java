@@ -6,9 +6,9 @@ class AES {
   String keyFile = "";
   String inputFile = "";
 
-  int Nb = 4;
-  int Nr = 10;// 12, or 14;
-  int Nk = 4; //, 6, or 8
+  int Nb = 4; //size
+  int Nr = 10;// 12, or 14; rounds
+  int Nk = 4; //, 6, or 8; key
 
   private static final char sbox[] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe,
 			0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72,
@@ -45,7 +45,9 @@ class AES {
 
   void SubBytes(byte[][] state){
     /*
-    for each byte in the array, use its value as an index into a fixed 256-element lookup table, and replace its value in the state by the byte value stored at that location in the table. You can find the table and the inverse table on the web.
+    for each byte in the array, use its value as an index into a fixed 256-element
+    lookup table, and replace its value in the state by the byte value stored at that
+    location in the table. You can find the table and the inverse table on the web.
     */
     //to hex to string, split
     for(int i = 0; i < 3; i++){
@@ -97,6 +99,7 @@ class AES {
     byte[][] state = new byte[4][Nb];
     int count = 0;
 
+    //fill state
     for (int i = 0; i < 3; i++){
       for (int j = 0; j < 3; j++){
         state[i][j] = in[count];
@@ -121,10 +124,100 @@ class AES {
     //out = state;
   }
 
+  byte[] Rcon(int i){
+    byte[] newArray = {(byte)Math.pow(2,i-1),0,0,0};
+    return newArray;
+  }
+
+  byte[] RotWord(byte[] x){
+    byte[] row = x;
+    x[0] = row[1];
+    x[1] = row[2];
+    x[2] = row[3];
+    x[3] = row[0];
+
+    return x;
+  }
+
+  byte[] SubWord(byte[] w){
+    for (int i = 0; i < 3; i++){
+      int temp = w[i];
+      String hex = String.format("%02X", temp);//Integer.toHexString(temp);
+      String[] values = hex.split("");
+      int x =  Integer.parseInt(values[0], 16);
+      int y = Integer.parseInt(values[1], 16);
+      char r = sbox[x+y];
+      w[i] = (byte)Character.getNumericValue(r);
+    }
+
+    return w;
+  }
+
+  void KeyExpansion(byte K[4][Nk], byte W[4][Nb(Nr+1)]) {
+
+    for(j = 0; j < Nk; j++)
+      for(i = 0; i < 4; i++)
+        W[i][j] = K[i][j];
+
+    for(j = Nk; < Nb(Nr + 1); j++)
+      if (j%Nk == 0) {
+          W[0][j] = W[0][j — Nk] ^ SubWord(W[0][j — Nk]) ^ rcon[j/Nk];
+          for(i = 1; i < 4; i++)
+            W[i][j] =  W[i][j - Nk] ^ SubWord(W[0][i + 1%j][j - 1]);
+      }
+      // else if (j % Nk == 4) {
+      //   for = o; i < 4.; = Nk] (c) stwtillj :01 ;
+      // else
+      //   for(i = 0; i < 4; i++) WHIM 7= — N ;
+    }
+  }
+
+
+  // byte[] keyExpansion(byte[] key) {
+  //   int Nr = Nk + 6;
+  //   byte[] w = new byte[4*Nb*(Nr+1)];
+  //   int i = 0;
+  //
+  //   while ( i < Nk) {
+  //       w[4*i] = key[4*i];
+  //       w[4*i+1] = key[4*i+1];
+  //       w[4*i+2] = key[4*i+2];
+  //       w[4*i+3] = key[4*i+3];
+  //     i++;
+  //   }
+  //
+  //   i = Nk;
+  //
+  //   while(i < Nb*(Nr+1)) {
+  //     byte[] temp = {w[4*i], w[4*i+1], w[4*i+2], w[4*i+3] };
+  //
+  //     if (i % Nk == 0) {
+  //       byte[] temp2 = SubWord(RotWord(temp));
+  //       byte[] rcon = Rcon(i/Nk);
+  //       for (int j = 0; j < 3; j++){
+  //         temp[j] = (byte)(temp2[j] ^ rcon[j]);
+  //       }
+  //     }
+  //
+  //     else if (Nk > 6 && (i%Nk) == 4)
+  //       temp = SubWord(temp);
+  //
+  //     for (int j = 0; j < 3; j++){
+  //       w[4*i+j] = (byte)(w[4*i-Nk+j] ^ temp[j]);
+  //     }
+  //
+  //     i++;
+  //   }
+  //   return w;
+  //
+  // }
+
+
   void encrypt() throws IOException {
     BufferedReader keyRaw = new BufferedReader(new FileReader("key"));
     BufferedReader plaintextRaw = new BufferedReader(new FileReader("plaintext"));
     PrintWriter ciphertext = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc")));
+    System.out.println("Encryption with Key Size: "+Nk + " Rounds: " + Nr);
 
     //InputFile: You'll read in a line, converting from Hex to binary for storage into your state array.
     String line = null;
@@ -141,17 +234,26 @@ class AES {
       /*The expanded key. The initial key is of size 4*Nk bytes (see table earlier), and this
         is expanded to the array w of 4*Nb*(Nr+1) = 16*(Nr+1) bytes for input to the encryption
         algorithm*/
-      byte[] w = new byte[16*(Nr+1)];
+      byte[] w = new byte[4*Nk];
       int j = 0;
 
       //EXPANDING THE KEY
-      for(int i = 0; i < w.length; i++){
-        if (j == key.length())
-          j = 0;
-
-        w[i] = (byte)Character.getNumericValue(key.charAt(j));
-        j++;
+      for(int i = 0; i < 32; i+=2){
+        w[i/2] = (byte)Integer.parseInt( key.substring(i,i+2),16 );
       }
+
+      System.out.println("Key:");
+      System.out.println(Arrays.toString(w));
+
+      System.out.println("Expanded Key:");
+      w = keyExpansion(w);
+      for (j = 0; j < w.length; j++) {
+        if ( j != 0 && j%4 ==0)
+          System.out.println("" );
+        System.out.print( String.format("%02X",w[j]) + " " );
+      }
+      //System.out.println(Arrays.toString(w));
+      System.exit(1);
 
       //FROM HEX TO INT, BYTES
       for (int i = 0; i < line.length(); i++){

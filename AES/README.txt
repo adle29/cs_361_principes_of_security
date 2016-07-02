@@ -1,8 +1,8 @@
-UTEID: aa63765; kcv296
-FIRSTNAME: Abraham; Kiankris
-LASTNAME: Adberstein; Villagonzalo
-CSACCOUNT: sniper; kiankris
-EMAIL: aadberstein@gmail.com; kcv@utexas.edu
+UTEID: aa63765; kcv296 ;
+FIRSTNAME: Abraham; Kiankris;
+LASTNAME: Adberstein; Villagonzalo;
+CSACCOUNT: sniper; kiankris;
+EMAIL: aadberstein@gmail.com; kcv@utexas.edu;
 
 [Program 4]
 [Description]

@@ -212,39 +212,39 @@ class AES {
         }
     }
 
-    void Cipher(byte[] in, byte out[], byte[][] w) {
-        byte[][] state = new byte[4][Nb];
-
-        System.out.println("plaintext");
-        printArray(state);
-        AddRoundKey(state, w, 0);
-        // printArray(state, "After addRoundKey(0): ");
-        // here is where you apply the rounds
-        for (int round = 1; round < Nr; round++) {
-            SubBytes(state);
-            // printArray(state, "After subBytes: ");
-            ShiftRows(state);
-            // printArray(state, "After shiftRows: ");
-            MixColumns(state);
-            // printArray(state, "After mixColumns: ");
-            AddRoundKey(state, w, round * Nb);
-            // printArray(state, "After addRoundKey(" + round +"): ");
-        }
-
-        SubBytes(state);
-        // printArray(state, "After subBytes: ");
-        // printArray(state);
-
-        ShiftRows(state);
-        // printArray(state, "After shiftRows: ");
-        // printArray(state);
-
-        AddRoundKey(state, w, 10 * Nb);
-        // printArray(state, "After addRoundKey(" + 10 +"): ");
-        System.out.println("CipherText");
-        printArray(state);
-
-    }
+    // void Cipher(byte[] in, byte out[], byte[][] w) {
+    //     byte[][] state = new byte[4][Nb];
+    //
+    //     System.out.println("plaintext");
+    //     printArray(state);
+    //     AddRoundKey(state, w, 0);
+    //     // printArray(state, "After addRoundKey(0): ");
+    //     // here is where you apply the rounds
+    //     for (int round = 1; round < Nr; round++) {
+    //         SubBytes(state);
+    //         // printArray(state, "After subBytes: ");
+    //         ShiftRows(state);
+    //         // printArray(state, "After shiftRows: ");
+    //         MixColumns(state);
+    //         // printArray(state, "After mixColumns: ");
+    //         AddRoundKey(state, w, round * Nb);
+    //         // printArray(state, "After addRoundKey(" + round +"): ");
+    //     }
+    //
+    //     SubBytes(state);
+    //     // printArray(state, "After subBytes: ");
+    //     // printArray(state);
+    //
+    //     ShiftRows(state);
+    //     // printArray(state, "After shiftRows: ");
+    //     // printArray(state);
+    //
+    //     AddRoundKey(state, w, 10 * Nb);
+    //     // printArray(state, "After addRoundKey(" + 10 +"): ");
+    //     System.out.println("CipherText");
+    //     printArray(state);
+    //
+    // }
 
     void printArray(byte[][] state) {
         for (int i = 0; i < 4; i++) {
@@ -256,16 +256,13 @@ class AES {
         }
     }
 
-    void writeArrayToFile(byte[][] state, String filename) throws IOException {
-        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+    void writeArrayToFile(byte[][] state, PrintWriter p) throws IOException {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 p.print(String.format("%02x", state[i][j]));
             }
         }
-        p.println(" ");
-        p.close();
-
+        p.println("\n");
     }
 
     void printArray(byte[][] state, String s) {
@@ -330,7 +327,7 @@ class AES {
         return W;
     }
 
-    void Cipher(byte[] in, byte[][] w) throws IOException {
+    void Cipher(byte[] in, byte[][] w, PrintWriter p) throws IOException {
         byte[][] state = new byte[4][Nb];
         int count = 0;
 
@@ -341,8 +338,8 @@ class AES {
                 count++;
             }
         }
-        System.out.println("plaintext");
-        printArray(state);
+        // System.out.println("plaintext");
+        // printArray(state);
         AddRoundKey(state, w, 0);
 
         // here is where you apply the rounds
@@ -367,16 +364,17 @@ class AES {
 
         AddRoundKey(state, w, 10 * Nb);
         // printArray(state, "After addRoundKey(" + 10 +"): ");
-        System.out.println("CipherText");
-        printArray(state);
+        // System.out.println("CipherText");
+        // printArray(state);
         // write out the ciphertext in Hex notation to the output file
-        writeArrayToFile(state, "plaintext.enc");
+        writeArrayToFile(state, p);
 
     }
 
     void encrypt() throws IOException {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader plaintextRaw = new BufferedReader(new FileReader(inputFile));
+        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
         System.out.println("Encryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         // InputFile: You'll read in a line, converting from Hex to binary for
@@ -410,18 +408,18 @@ class AES {
                 }
             }
 
-            System.out.println("Key:");
-            System.out.println(Arrays.deepToString(w));
+            //System.out.println("Key:");
+            //System.out.println(Arrays.deepToString(w));
 
-            System.out.println("Expanded Key:");
+            //System.out.println("Expanded Key:");
             byte[][] exW = KeyExpansion(w);
 
-            for (j = 0; j < 4; j++) {
-                for (int i = 0; i < Nb * (Nr + 1); i++) {
-                    System.out.print(String.format("%02X", exW[j][i]) + " ");
-                }
-                System.out.println("");
-            }
+            // for (j = 0; j < 4; j++) {
+            //     for (int i = 0; i < Nb * (Nr + 1); i++) {
+            //         System.out.print(String.format("%02X", exW[j][i]) + " ");
+            //     }
+            //     System.out.println("");
+            // }
             // System.out.println("");
             //System.out.println(Arrays.toString(in));
             // System.exit(1);
@@ -433,14 +431,15 @@ class AES {
               count +=2;
             }
             // Apply the AES algorithm to encrypt the string as stored
-            Cipher(in, exW);
+            Cipher(in, exW, p);
 
         }
         keyRaw.close();
         plaintextRaw.close();
+        p.close();
     }
 
-    void Decipher(byte[] in, byte[][] w) throws IOException {
+    void Decipher(byte[] in, byte[][] w, PrintWriter p) throws IOException {
         byte[][] state = new byte[4][Nb];
         int count = 0;
 
@@ -452,7 +451,7 @@ class AES {
             }
         }
 
-        System.out.println("ciphertext");
+        //System.out.println("ciphertext");
         // printArray(state);
 
         AddRoundKey(state, w, Nb * 10);
@@ -493,13 +492,14 @@ class AES {
         AddRoundKey(state, w, 0);
         // printArray(state, "After addRoundKey(" + 0 + "): ");
 
-        printArray(state);
-        writeArrayToFile(state, "plaintext.enc.dec");
+        //printArray(state);
+        writeArrayToFile(state, p);
     }
 
     void decrypt() throws IOException {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader ciphertextRaw = new BufferedReader(new FileReader(inputFile));
+        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
         System.out.println("Decryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         String line = null;
@@ -532,11 +532,12 @@ class AES {
                 count += 2;
             }
 
-            Decipher(in, exW);
+            Decipher(in, exW, p);
 
         }
         keyRaw.close();
         ciphertextRaw.close();
+        p.close();
     }
 
     public static void main(String args[]) throws IOException {
@@ -555,11 +556,6 @@ class AES {
             if (arg.equals("-length")) {
               if (i < args.length)
                   sys.length = args[i++];
-            }
-
-            if (arg.equals("-mode")) {
-              if (i < args.length)
-                  sys.mode = args[i++];
             }
 
     // use this type of check for arguments that require arguments
@@ -588,11 +584,9 @@ class AES {
                 switch (arg.charAt(0)) {
                 case 'd':
                     sys.option = "d";
-                    i++;
                     break;
                 case 'e':
                     sys.option = "e";
-                    i++;
                     break;
                 default:
                     System.err.println("ParseCmdLine: illegal option ");
@@ -600,6 +594,7 @@ class AES {
                 }
             }
         }
+
         if (i != args.length)
             System.err.println("Usage: java AES option [-length] [-key afile] [-input afile]");
 

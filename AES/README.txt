@@ -1,15 +1,15 @@
-UTEID: aa63765; 
-FIRSTNAME: Abraham;
-LASTNAME: Adberstein;
-CSACCOUNT: sniper;
-EMAIL: aadberstein@gmail.com;
+UTEID: aa63765; kcv296
+FIRSTNAME: Abraham; Kiankris
+LASTNAME: Adberstein; Villagonzalo
+CSACCOUNT: sniper; kiankris
+EMAIL: aadberstein@gmail.com; kcv@utexas.edu
 
 [Program 4]
 [Description]
-There are 6 java files: In XXX.java, We implemented some functions, e.g. .... Johnny wrote function/method A, B, C. Brad wrote function/method D, E, F. The most important method is A, which has four main steps : 1..., 2..., 3..., 4... To complie our program, you need to use "javac *.java". To run our program, you need to use "java SecureSystem instructionList"
+There is one java file, AES.java. It reads a block of text from a file then sends it to the encrypt method. In this method it runs through the rounds process of encrypting the block using the AES scheme. Abraham did the subbytes, shiftrows, and keyexpansion methods. Kiankris did mixColumns and addRoundKey. Upon completion it writes the completed block to a file named plaintext.enc. Subsequently the program runs through a method called decrypt which does the process that encrypt does in reverse. There are seperate inverse methods for subbytes, mix columns, and shift rows. The invMixColumns method uses Dr. Young's code. After completing the decrryption process the decrypted message is written to a file named plaintext.enc.dec.
 
 [Finish]
-We finished the most/half/one quarter of this assignment. There are some bugs in function/method A in XXX.java file. Some special test cases won't work, the reason is ... For YYY.java, we don't know how to implement the sort method.
+We finished the most/half/one quarter of this assignment. There are some bugs in that only the base case of a string of 0's as the plaintext will be encrypted, however any key seems to be usable. 
 
 [Test Case 1]
 

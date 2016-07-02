@@ -9,5 +9,5 @@ clean:
 		$(RM) *.class
 
 run:
-	javac AES.java ; java AES d 256 -length 256 -mode ECB -key key -input plaintext.enc
-	javac AES.java ; java AES d 256 -length 256 -mode ECB -key key -input plaintext.enc
+	javac AES.java ; java AES e -length 256 -key key -input plaintext.enc
+	javac AES.java ; java AES d -length 256 -key key -input plaintext.enc

@@ -340,7 +340,7 @@ class AES {
     void encrypt() throws IOException {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader plaintextRaw = new BufferedReader(new FileReader(inputFile));
-        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc")));
+        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(inputFile+".enc")));
         System.out.println("Encryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         // InputFile: You'll read in a line, converting from Hex to binary for
@@ -464,7 +464,7 @@ class AES {
     void decrypt() throws IOException {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader ciphertextRaw = new BufferedReader(new FileReader(inputFile));
-        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
+        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(inputFile+".dec")));
         System.out.println("Decryption with Key Size: " + Nk + " Rounds: " + Nr + " filename: "+ inputFile);
 
         String line = null;
@@ -583,11 +583,27 @@ class AES {
           System.exit(1);
         }
 
-        if (sys.option.equals("e"))
+        if (sys.option.equals("e")){
+          long startTime = System.currentTimeMillis();
           sys.encrypt();
+          long endTime = System.currentTimeMillis();
+          long completionTime = endTime - startTime;
+          System.out.println("Start Time: " + startTime + "ms");
+          System.out.println("End Time: " + endTime + "ms");
+          System.out.println("Completion Time: " + completionTime + "ms");
+          System.out.println();
+        }
 
-        if (sys.option.equals("d"))
+        if (sys.option.equals("d")) {
+          long startTime = System.currentTimeMillis();
           sys.decrypt();
+          long endTime = System.currentTimeMillis();
+          long completionTime = endTime - startTime;
+          System.out.println("Start Time: " + startTime + "ms");
+          System.out.println("End Time: " + endTime + "ms");
+          System.out.println("Completion Time: " + completionTime + "ms");
+          System.out.println();
+        }
 
     }
 

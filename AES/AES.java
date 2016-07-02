@@ -212,40 +212,6 @@ class AES {
         }
     }
 
-    // void Cipher(byte[] in, byte out[], byte[][] w) {
-    //     byte[][] state = new byte[4][Nb];
-    //
-    //     System.out.println("plaintext");
-    //     printArray(state);
-    //     AddRoundKey(state, w, 0);
-    //     // printArray(state, "After addRoundKey(0): ");
-    //     // here is where you apply the rounds
-    //     for (int round = 1; round < Nr; round++) {
-    //         SubBytes(state);
-    //         // printArray(state, "After subBytes: ");
-    //         ShiftRows(state);
-    //         // printArray(state, "After shiftRows: ");
-    //         MixColumns(state);
-    //         // printArray(state, "After mixColumns: ");
-    //         AddRoundKey(state, w, round * Nb);
-    //         // printArray(state, "After addRoundKey(" + round +"): ");
-    //     }
-    //
-    //     SubBytes(state);
-    //     // printArray(state, "After subBytes: ");
-    //     // printArray(state);
-    //
-    //     ShiftRows(state);
-    //     // printArray(state, "After shiftRows: ");
-    //     // printArray(state);
-    //
-    //     AddRoundKey(state, w, 10 * Nb);
-    //     // printArray(state, "After addRoundKey(" + 10 +"): ");
-    //     System.out.println("CipherText");
-    //     printArray(state);
-    //
-    // }
-
     void printArray(byte[][] state) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -262,7 +228,7 @@ class AES {
                 p.print(String.format("%02x", state[i][j]));
             }
         }
-        p.println("\n");
+        p.println("");
     }
 
     void printArray(byte[][] state, String s) {
@@ -384,7 +350,7 @@ class AES {
 
         while ((line = plaintextRaw.readLine()) != null) {
             line = line.toLowerCase().trim();
-            System.out.println(inputFile+ " here");
+            //System.out.println(inputFile+ " here");
             // from hex to binary
             // The input data block is broken into a 4x4 byte array (128-bit
             // key)
@@ -411,7 +377,7 @@ class AES {
             //System.out.println("Key:");
             //System.out.println(Arrays.deepToString(w));
 
-            System.out.println("Expanded Key:");
+            //System.out.println("Expanded Key:");
             byte[][] exW = KeyExpansion(w);
 
             // for (j = 0; j < 4; j++) {

@@ -43,6 +43,56 @@ class AES {
       0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61, 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6,
       0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
 
+  char rcon[] = {
+        0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
+        0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
+        0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
+        0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8,
+        0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef,
+        0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc,
+        0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b,
+        0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3,
+        0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94,
+        0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20,
+        0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35,
+        0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f,
+        0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
+        0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
+        0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
+        0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
+  };
+
+  final static int[] LogTable = {
+      0,     0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 238, 223, 3, 100, 4, 224, 14, 52,
+      141, 129, 239, 76, 113, 8, 200, 248, 105, 28, 193, 125, 194, 29, 181, 249, 185, 39, 106, 77, 228, 166, 114,
+      154, 201, 9, 120, 101, 47, 138, 5, 33, 15, 225, 36, 18, 240, 130, 69, 53, 147, 218, 142, 150, 143, 219, 189,
+      54, 208, 206, 148, 19, 92, 210, 241, 64, 70, 131, 56, 102, 221, 253, 48, 191, 6, 139, 98, 179, 37, 226, 152,
+      34, 136, 145, 16, 126, 110, 72, 195, 163, 182, 30, 66, 58, 107, 40, 84, 250, 133, 61, 186, 43, 121, 10, 21,
+      155, 159, 94, 202, 78, 212, 172, 229, 243, 115, 167, 87, 175, 88, 168, 80, 244, 234, 214, 116, 79, 174, 233,
+      213, 231, 230, 173, 232, 44, 215, 117, 122, 235, 22, 11, 245, 89, 203, 95, 176, 156, 169, 81, 160, 127, 12,
+      246, 111, 23, 196, 73, 236, 216, 67, 31, 45, 164, 118, 123, 183, 204, 187, 62, 90, 251, 96, 177, 134, 59,
+      82, 161, 108, 170, 85, 41, 157, 151, 178, 135, 144, 97, 190, 220, 252, 188, 149, 207, 205, 55, 63, 91, 209,
+      83, 57, 132, 60, 65, 162, 109, 71, 20, 42, 158, 93, 86, 242, 211, 171, 68, 17, 146, 217, 35, 32, 46, 137,
+      180, 124, 184, 38, 119, 153, 227, 165, 103, 74, 237, 222, 197, 49, 254, 24, 13, 99, 140, 128, 192, 247, 112,
+      7
+    };
+
+  final static int[] AlogTable = { 1, 3, 5, 15, 17, 51, 85, 255, 26, 46, 114, 150, 161, 248, 19, 53, 95, 225, 56, 72,
+      216, 115, 149, 164, 247, 2, 6, 10, 30, 34, 102, 170, 229, 52, 92, 228, 55, 89, 235, 38, 106, 190, 217, 112,
+      144, 171, 230, 49, 83, 245, 4, 12, 20, 60, 68, 204, 79, 209, 104, 184, 211, 110, 178, 205, 76, 212, 103,
+      169, 224, 59, 77, 215, 98, 166, 241, 8, 24, 40, 120, 136, 131, 158, 185, 208, 107, 189, 220, 127, 129, 152,
+      179, 206, 73, 219, 118, 154, 181, 196, 87, 249, 16, 48, 80, 240, 11, 29, 39, 105, 187, 214, 97, 163, 254,
+      25, 43, 125, 135, 146, 173, 236, 47, 113, 147, 174, 233, 32, 96, 160, 251, 22, 58, 78, 210, 109, 183, 194,
+      93, 231, 50, 86, 250, 21, 63, 65, 195, 94, 226, 61, 71, 201, 64, 192, 91, 237, 44, 116, 156, 191, 218, 117,
+      159, 186, 213, 100, 172, 239, 42, 126, 130, 157, 188, 223, 122, 142, 137, 128, 155, 182, 193, 88, 232, 35,
+      101, 175, 234, 37, 111, 177, 200, 67, 197, 84, 252, 31, 33, 99, 165, 244, 7, 9, 27, 45, 119, 153, 176, 203,
+      70, 202, 69, 207, 74, 222, 121, 139, 134, 145, 168, 227, 62, 66, 198, 81, 243, 14, 18, 54, 90, 238, 41, 123,
+      141, 140, 143, 138, 133, 148, 167, 242, 13, 23, 57, 75, 221, 124, 132, 151, 162, 253, 28, 36, 108, 180, 199,
+      82, 246, 1
+
+    };
+
+
   void SubBytes(byte[][] state){
     /*
     for each byte in the array, use its value as an index into a fixed 256-element
@@ -64,6 +114,20 @@ class AES {
 
   }
 
+  void InvSubBytes(byte[][] state){
+    for(int i = 0; i < 4; i++){
+      for(int j = 0; j < 4; j++){
+        int temp = state[i][j];
+        String hex = Integer.toHexString(temp);
+        hex = (hex.length() > 2) ? hex.substring(hex.length() - 2) : "0".concat(hex);
+        int x = Integer.parseInt(hex.substring(0,1), 16);
+        int y = Integer.parseInt(hex.substring(1), 16);
+        // System.out.println(hex + " " + x + " " + y + " " + ((x * 16) + y) + " " + r);
+        state[i][j] = (byte) (rsbox[(x * 16) + y]);
+      }
+    }
+  }
+
   void ShiftRows(byte[][] state){
     rotateMatrixCells(state, 1, 1);
     rotateMatrixCells(state, 2, 2);
@@ -81,10 +145,6 @@ class AES {
     byte temp;
     for(int i = 0; i < turns; i++){
       temp = row[0];
-      // state[0][rowIndex] = row[1];
-      // state[1][rowIndex] = row[2];
-      // state[2][rowIndex] = row[3];
-      // state[3][rowIndex] = temp;
 
       state[rowIndex][0] = row[1];
       state[rowIndex][1] = row[2];
@@ -92,32 +152,6 @@ class AES {
       state[rowIndex][3] = temp;
     }
   }
-
-  final static int[] LogTable = { 0, 0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 238, 223, 3, 100, 4, 224, 14, 52,
-      141, 129, 239, 76, 113, 8, 200, 248, 105, 28, 193, 125, 194, 29, 181, 249, 185, 39, 106, 77, 228, 166, 114,
-      154, 201, 9, 120, 101, 47, 138, 5, 33, 15, 225, 36, 18, 240, 130, 69, 53, 147, 218, 142, 150, 143, 219, 189,
-      54, 208, 206, 148, 19, 92, 210, 241, 64, 70, 131, 56, 102, 221, 253, 48, 191, 6, 139, 98, 179, 37, 226, 152,
-      34, 136, 145, 16, 126, 110, 72, 195, 163, 182, 30, 66, 58, 107, 40, 84, 250, 133, 61, 186, 43, 121, 10, 21,
-      155, 159, 94, 202, 78, 212, 172, 229, 243, 115, 167, 87, 175, 88, 168, 80, 244, 234, 214, 116, 79, 174, 233,
-      213, 231, 230, 173, 232, 44, 215, 117, 122, 235, 22, 11, 245, 89, 203, 95, 176, 156, 169, 81, 160, 127, 12,
-      246, 111, 23, 196, 73, 236, 216, 67, 31, 45, 164, 118, 123, 183, 204, 187, 62, 90, 251, 96, 177, 134, 59,
-      82, 161, 108, 170, 85, 41, 157, 151, 178, 135, 144, 97, 190, 220, 252, 188, 149, 207, 205, 55, 63, 91, 209,
-      83, 57, 132, 60, 65, 162, 109, 71, 20, 42, 158, 93, 86, 242, 211, 171, 68, 17, 146, 217, 35, 32, 46, 137,
-      180, 124, 184, 38, 119, 153, 227, 165, 103, 74, 237, 222, 197, 49, 254, 24, 13, 99, 140, 128, 192, 247, 112,
-      7 };
-
-  final static int[] AlogTable = { 1, 3, 5, 15, 17, 51, 85, 255, 26, 46, 114, 150, 161, 248, 19, 53, 95, 225, 56, 72,
-      216, 115, 149, 164, 247, 2, 6, 10, 30, 34, 102, 170, 229, 52, 92, 228, 55, 89, 235, 38, 106, 190, 217, 112,
-      144, 171, 230, 49, 83, 245, 4, 12, 20, 60, 68, 204, 79, 209, 104, 184, 211, 110, 178, 205, 76, 212, 103,
-      169, 224, 59, 77, 215, 98, 166, 241, 8, 24, 40, 120, 136, 131, 158, 185, 208, 107, 189, 220, 127, 129, 152,
-      179, 206, 73, 219, 118, 154, 181, 196, 87, 249, 16, 48, 80, 240, 11, 29, 39, 105, 187, 214, 97, 163, 254,
-      25, 43, 125, 135, 146, 173, 236, 47, 113, 147, 174, 233, 32, 96, 160, 251, 22, 58, 78, 210, 109, 183, 194,
-      93, 231, 50, 86, 250, 21, 63, 65, 195, 94, 226, 61, 71, 201, 64, 192, 91, 237, 44, 116, 156, 191, 218, 117,
-      159, 186, 213, 100, 172, 239, 42, 126, 130, 157, 188, 223, 122, 142, 137, 128, 155, 182, 193, 88, 232, 35,
-      101, 175, 234, 37, 111, 177, 200, 67, 197, 84, 252, 31, 33, 99, 165, 244, 7, 9, 27, 45, 119, 153, 176, 203,
-      70, 202, 69, 207, 74, 222, 121, 139, 134, 145, 168, 227, 62, 66, 198, 81, 243, 14, 18, 54, 90, 238, 41, 123,
-      141, 140, 143, 138, 133, 148, 167, 242, 13, 23, 57, 75, 221, 124, 132, 151, 162, 253, 28, 36, 108, 180, 199,
-      82, 246, 1 };
 
   byte mul(int a, byte b) {
     int inda = (a < 0) ? (a + 256) : a;
@@ -129,7 +163,7 @@ class AES {
       return val;
     } else
       return 0;
-  } 
+  }
 
   void invMixColumn(byte[][] st) {
     // note that a is just a copy of st[.][c]
@@ -141,7 +175,7 @@ class AES {
       st[2][c] = (byte) (mul(0xE, a[2]) ^ mul(0xB, a[3]) ^ mul(0xD, a[0]) ^ mul(0x9, a[1]));
       st[3][c] = (byte) (mul(0xE, a[3]) ^ mul(0xB, a[0]) ^ mul(0xD, a[1]) ^ mul(0x9, a[2]));
     }
-  } 
+  }
 
   void MixColumns(byte[][] test){
     for (int j = 0; j < 4; j++) {
@@ -165,65 +199,23 @@ class AES {
     return (byte) ((x == 2) ? y : (y ^ original));
   }
 
-    void AddRoundKey(byte[][] state, byte[][] w, int startColumn){
-        // XOR the state with a 128-bit round key derived from the original key K by a recursive process.
-      int j = 0;
-      for(int i = 0; i < 4; i++){
-            // byteToHexString(state[i][j]);
-            state[i][j] ^= w[i][j + startColumn];
-            state[i][j + 1] ^= w[i][j + 1 + startColumn];
-            state[i][j + 2] ^= w[i][j + 2 +startColumn];
-            state[i][j + 3] ^= w[i][j + 3 + startColumn];
-            // byteToHexString(w[i][j + startColumn]);
-            // byteToHexString(state[i][j]);
-            // System.out.println();
-        }
-      }
-
-  void Cipher(byte[] in, byte out[], byte[][] w){
-    byte[][] state = new byte[4][Nb];
-    int count = 0;
-
-    //fill state
-    for (int i = 0; i < 3; i++){
-      for (int j = 0; j < 3; j++){
-        state[i][j] = in[count];
-        count++;
-      }
+  void AddRoundKey(byte[][] state, byte[][] w, int startColumn){
+      // XOR the state with a 128-bit round key derived from the original key K by a recursive process.
+    // for (int i = 0; i < state.length; i++) {
+    //         for (int j = 0; j < state[0].length; j++)
+    //             state[j][i] ^= w[j][i];
+    //
+    // }
+    int j = 0;
+    for(int i = 0; i < 4; i++){
+          state[i][j]     ^= w[i][j + startColumn];
+          state[i][j + 1] ^= w[i][j + 1 + startColumn];
+          state[i][j + 2] ^= w[i][j + 2 +startColumn];
+          state[i][j + 3] ^= w[i][j + 3 + startColumn];
+      //    j++;
     }
-    System.out.println("plaintext");
-    printArray(state);
-    AddRoundKey(state, w, 0);
-    // printArray(state, "After addRoundKey(0): ");
-    // here is where you apply the rounds
-    for (int round = 1; round < Nr; round++){
-      SubBytes(state);
-      // printArray(state, "After subBytes: ");
-      ShiftRows(state);
-      // printArray(state, "After shiftRows: ");
-      MixColumns(state);
-      // printArray(state, "After mixColumns: ");
-      AddRoundKey(state, w, round*Nb);
-      // printArray(state, "After addRoundKey(" + round +"): ");
-    }
-
-    SubBytes(state);
-    // printArray(state, "After subBytes: ");
-    // printArray(state);
-
-    
-    ShiftRows(state);
-    // printArray(state, "After shiftRows: ");
-    // printArray(state);
-
-
-
-    AddRoundKey(state, w, 10 * Nb);
-    // printArray(state, "After addRoundKey(" + 10 +"): ");
-    System.out.println("CipherText");
-    printArray(state);
-
   }
+
   void printArray(byte[][] state){
     for(int i = 0; i < 4; i++){
       for(int j = 0; j < 4; j++){
@@ -233,6 +225,18 @@ class AES {
       System.out.println();
     }
   }
+
+  void writeArrayToFile(byte[][] state, String filename) throws IOException {
+    PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+    for(int i = 0; i < 4; i++){
+      for(int j = 0; j < 4; j++){
+        p.print(String.format("%02x", state[i][j]));
+      }
+    }
+    p.println(" ");
+    p.close();
+  }
+
   void printArray(byte[][] state, String s){
     System.out.println(s);
     for(int i = 0;i < 4; i++){
@@ -268,25 +272,6 @@ class AES {
     return (byte)sbox[16 * x + y];
   }
 
-  char rcon[] = {
-    0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
-    0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
-    0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
-    0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8,
-    0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef,
-    0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc,
-    0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b,
-    0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3,
-    0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94,
-    0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20,
-    0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35,
-    0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f,
-    0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
-    0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
-    0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
-    0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
-};
-
   byte[][] KeyExpansion(byte[][] K) {
     // nb = 4, nr = 10,
     byte[][] W = new byte[4][Nb*(Nr+1)];
@@ -317,10 +302,54 @@ class AES {
     return W;
   }
 
+  void Cipher(byte[] in, byte[][] w) throws IOException  {
+    byte[][] state = new byte[4][Nb];
+    int count = 0;
+
+    //fill state
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        state[i][j] = in[count];
+        count++;
+      }
+    }
+    System.out.println("plaintext");
+    printArray(state);
+    AddRoundKey(state, w, 0);
+
+    // here is where you apply the rounds
+    for (int round = 1; round < Nr; round++){
+      SubBytes(state);
+      // printArray(state, "After subBytes: ");
+      ShiftRows(state);
+      // printArray(state, "After shiftRows: ");
+      MixColumns(state);
+      // printArray(state, "After mixColumns: ");
+      AddRoundKey(state, w, round*Nb);
+      // printArray(state, "After addRoundKey(" + round +"): ");
+    }
+
+    SubBytes(state);
+    // printArray(state, "After subBytes: ");
+    // printArray(state);
+
+
+    ShiftRows(state);
+    // printArray(state, "After shiftRows: ");
+    // printArray(state);
+
+    AddRoundKey(state, w, 10 * Nb);
+    // printArray(state, "After addRoundKey(" + 10 +"): ");
+    System.out.println("CipherText");
+    printArray(state);
+    //write out the ciphertext in Hex notation to the output file
+    writeArrayToFile(state, "plaintext.enc");
+
+  }
+
   void encrypt() throws IOException {
     BufferedReader keyRaw = new BufferedReader(new FileReader("key"));
     BufferedReader plaintextRaw = new BufferedReader(new FileReader("plaintext"));
-    PrintWriter ciphertext = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc")));
     System.out.println("Encryption with Key Size: "+Nk + " Rounds: " + Nr);
 
     //InputFile: You'll read in a line, converting from Hex to binary for storage into your state array.
@@ -332,8 +361,7 @@ class AES {
 
       //from hex to binary
       //The input data block is broken into a 4x4 byte array (128-bit key)
-      byte[] in = new byte[16];
-      byte[] out = new byte[16];
+      byte[] in = new byte[4*Nb];
 
       /*The expanded key. The initial key is of size 4*Nk bytes (see table earlier), and this
         is expanded to the array w of 4*Nb*(Nr+1) = 16*(Nr+1) bytes for input to the encryption
@@ -356,56 +384,98 @@ class AES {
 
       System.out.println("Expanded Key:");
       byte[][] exW  = KeyExpansion(w);
+
       for (j = 0; j < 4; j++) {
         for (int i = 0; i < Nb*(Nr+1); i++) {
-          // if ( i != 0 && i%4 == 0)
-          //   System.out.println("" );
           System.out.print( String.format("%02X",exW[j][i]) + " " );
         }
         System.out.println("" );
       }
-      // System.out.println("");
-      // System.out.println(Arrays.deepToString(exW));
-      // System.exit(1);
 
       //FROM HEX TO INT, BYTES
-      for (int i = 0; i < line.length(); i++){
-        in[i] = (byte)Character.getNumericValue(line.charAt(i));
+      count = 0;
+
+      for (int i = 0; i < 4*Nb; i++){
+        in [i] = (byte)Integer.parseInt( line.substring(count, count+2),16 );
+        count +=2;
       }
+      // for (int i = 0; i < line.length(); i++){
+      //   in[i] = (byte)Character.getNumericValue(line.charAt(i));
+      // }
 
       // Apply the AES algorithm to encrypt the string as stored
-      Cipher(in, out, exW);
+      Cipher(in, exW);
 
-      //write out the ciphertext in Hex notation to the output file
     }
   }
 
-  void Decipher(byte[] in, byte out[], byte[] w) {
-    // AddRoundKey(state, w[Nr*Nb, (Nr+1)*Nb-1])
+  void Decipher(byte[] in, byte[][] w) throws IOException  {
+    byte[][] state = new byte[4][Nb];
+    int count = 0;
 
-    // for round = Nr-1 step -1 downto 1
-      // InvShiftRows(state)
-      // InvSubBytes(state)
-      // AddRoundKey(state, w[round*Nb, (round+1)*Nb-1])
-      // InvMixColumns(state)
-    // end for
+    //fill state
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        state[i][j] = in[count];
+        count++;
+      }
+    }
+
+    System.out.println("ciphertext");
+    printArray(state);
+  //  AddRoundKey(state, w,  Nr-1);
+    // printArray(state, "After addRoundKey(" +  (Nr-1) +"): ");
+
+    // for(int round = Nr-1; round < 1; round--){
+    //   InvShiftRows(state)
+    //   InvSubBytes(state)
+    //   AddRoundKey(state, w[round*Nb, (round+1)*Nb-1])
+    //   InvMixColumns(state)
+    // }
 
     // InvShiftRows(state)
     // InvSubBytes(state)
     // AddRoundKey(state, w[0, Nb-1])
-    // out = state
+    // writeArrayToFile(state, "plaintext.enc.dec");
   }
 
   void decrypt() throws IOException {
     BufferedReader keyRaw = new BufferedReader(new FileReader("key"));
-    BufferedReader ciphertextRaw = new BufferedReader(new FileReader("ciphertext"));
-    PrintWriter ciphertext = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
+    BufferedReader ciphertextRaw = new BufferedReader(new FileReader("plaintext.enc"));
+    System.out.println("\nDecryption with Key Size: "+Nk + " Rounds: " + Nr);
 
-    byte[] in = new byte[4*Nb];
-    byte[] out = new byte[4*Nb];
-    byte[] w = new byte[Nb*(Nr+1)];
-    // byte state[4,Nb]
-    // state = in
+    String line = null;
+    String key = keyRaw.readLine().trim();
+
+    while ( (line = ciphertextRaw.readLine()) != null ){
+      line = line.trim();
+
+      byte[] in = new byte[4*Nb];
+
+      byte[][] w = new byte[4][Nk];
+      int j = 0;
+      int count = 0;
+
+      //EXPANDING THE KEY
+      for(int i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++){
+          w[i][j] = (byte)Integer.parseInt( key.substring(count, count+2),16 );
+          count += 2;
+        }
+      }
+
+      byte[][] exW  = KeyExpansion(w);
+
+      //FROM HEX TO INT, BYTES
+      count = 0;
+
+      for (int i = 0; i < 4*Nb; i++){
+        in [i] = (byte)Integer.parseInt( line.substring(count, count+2),16 );
+        count +=2;
+      }
+
+      Decipher(in, w);
+    }
   }
 
   public static void main(String args[]) throws IOException {
@@ -418,6 +488,7 @@ class AES {
     }
     //Nb, Nr, Nk
     sys.encrypt();
+    sys.decrypt();
 
   }
 

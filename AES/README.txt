@@ -8,9 +8,17 @@ EMAIL: aadberstein@gmail.com; kcv@utexas.edu;
 [Description]
 There is one java file, AES.java. It reads a block of text from a file then sends it to the encrypt method. In this method it runs through the rounds process of encrypting the block using the AES scheme. Abraham did the subbytes, shiftrows, and keyexpansion methods. Kiankris did mixColumns and addRoundKey. Upon completion it writes the completed block to a file named plaintext.enc. Subsequently the program runs through a method called decrypt which does the process that encrypt does in reverse. There are seperate inverse methods for subbytes, mix columns, and shift rows. The invMixColumns method uses Dr. Young's code. After completing the decrryption process the decrypted message is written to a file named plaintext.enc.dec.
 
-[Finish]
-We finished most of this assignment. We didn't check for keys with larger or lower length than 32. Encryption and Decryption of a plaintext was succesful.  
+To run:
 
+make
+make run1 #or any of the following for different test cases
+make run2
+make run3
+make run4
+
+
+[Finish]
+We finished most of this assignment. We didn't check for keys with larger or lower length than 32. Encryption and Decryption of a plaintext was succesful.
 
 [Test Case 1]
 

@@ -374,7 +374,7 @@ class AES {
     void encrypt() throws IOException {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader plaintextRaw = new BufferedReader(new FileReader(inputFile));
-        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
+        PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc")));
         System.out.println("Encryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         // InputFile: You'll read in a line, converting from Hex to binary for
@@ -411,7 +411,7 @@ class AES {
             //System.out.println("Key:");
             //System.out.println(Arrays.deepToString(w));
 
-            //System.out.println("Expanded Key:");
+            System.out.println("Expanded Key:");
             byte[][] exW = KeyExpansion(w);
 
             // for (j = 0; j < 4; j++) {
@@ -452,10 +452,10 @@ class AES {
         }
 
         //System.out.println("ciphertext");
-        // printArray(state);
+        //printArray(state);
 
         AddRoundKey(state, w, Nb * 10);
-        // printArray(state, "After addRoundKey(" + (10) + "): ");
+        //printArray(state, "After addRoundKey(" + (10) + "): ");
 
         InvShiftRows(state);
         // printArray(state, "After invShiftRows: ");
@@ -491,7 +491,6 @@ class AES {
 
         AddRoundKey(state, w, 0);
         // printArray(state, "After addRoundKey(" + 0 + "): ");
-
         //printArray(state);
         writeArrayToFile(state, p);
     }
@@ -500,13 +499,16 @@ class AES {
         BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
         BufferedReader ciphertextRaw = new BufferedReader(new FileReader(inputFile));
         PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter("plaintext.enc.dec")));
-        System.out.println("Decryption with Key Size: " + Nk + " Rounds: " + Nr);
+        System.out.println("Decryption with Key Size: " + Nk + " Rounds: " + Nr + " filename: "+ inputFile);
 
         String line = null;
         String key = keyRaw.readLine().trim();
 
         while ((line = ciphertextRaw.readLine()) != null) {
             line = line.toLowerCase().trim();
+
+            if (line.length() < 16)
+              continue;
 
             byte[] in = new byte[4 * Nb];
 

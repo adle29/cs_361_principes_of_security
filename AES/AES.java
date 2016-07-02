@@ -384,7 +384,7 @@ class AES {
 
         while ((line = plaintextRaw.readLine()) != null) {
             line = line.toLowerCase().trim();
-
+            System.out.println(inputFile+ " here");
             // from hex to binary
             // The input data block is broken into a 4x4 byte array (128-bit
             // key)

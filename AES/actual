@@ -1,0 +1,63 @@
+00000000 62626262 9BF99BF9 9069F20B EE87757E 7FF88DF3 EC14996A 2135ACC6 0E3B9751 B18A1D4C B43E236F 
+00000000 62626262 9BF99BF9 9069F20B EE87757E 7FF88DF3 EC14996A 2135ACC6 0E3B9751 AA910657 99080E59 
+																				 -------- --------
+00000000 63636363 98FB98FB 976CF40F 066A9E91 2E44DA4B 6125FFB4 7550AF1B F9A9061D D47D7B66 EF92E98F 
+00000000 63636363 98FB98FB 976CF40F 066A9E91 2E44DA4B 6125FFB4 7550AF1B F9A9061D D47D7B66 EF92E98F 
+
+00000000 63636363 98FB98FB 34CF57AC DA1542EE 2B3E7C92 4B75099B 17626BF0 03610AFA D8B9B349 5BE25118 
+00000000 63636363 98FB98FB 34CF57AC DA1542EE 2B3E7C92 4B75099B 17626BF0 03610AFA D8B9B349 5BE25118
+
+00000000 63636363 C9AAC9AA 50FA3399 7B81B22B 8809BB90 858C37A7 870B3C9B 3338049F E2DADE41 CB11CF8E 
+00000000 63636363 C9AAC9AA 50FA3399 7B81B22B 8809BB90 858C37A7 870B3C9B 3338049F E2DADE41 B963BDFC
+																						  --------		
+
+
+256
+void expand_key(unsigned char *in) {
+        unsigned char t[4];
+        unsigned char c = 32;
+	unsigned char i = 1;
+        unsigned char a;
+        while(c < 240) {
+                /* Copy the temporary variable over */
+                for(a = 0; a < 4; a++) 
+                        t[a] = in[a + c - 4]; 
+                /* Every eight sets, do a complex calculation */
+                if(c % 32 == 0) {
+                        schedule_core(t,i);
+			i++;
+		}
+                /* For 256-bit keys, we add an extra sbox to the
+                 * calculation */
+                if(c % 32 == 16) {
+                        for(a = 0; a < 4; a++) 
+                                t[a] = sbox(t[a]);
+                }
+                for(a = 0; a < 4; a++) {
+                        in[c] = in[c - 32] ^ t[a];
+                        c++;
+                }
+        }
+}
+
+192
+void expand_key(unsigned char *in) {
+        unsigned char t[4];
+        unsigned char c = 24;
+	unsigned char i = 1;
+        unsigned char a;
+        while(c < 208) {
+                /* Copy the temporary variable over */
+                for(a = 0; a < 4; a++) 
+                        t[a] = in[a + c - 4]; 
+                /* Every six sets, do a complex calculation */
+                if(c % 24 == 0) {
+                        schedule_code(t,i);
+			i++;
+		}
+                for(a = 0; a < 4; a++) {
+                        in[c] = in[c - 24] ^ t[a];
+                        c++;
+                }
+        }
+}

@@ -5,6 +5,8 @@ class AES {
     String option = "";
     String keyFile = "";
     String inputFile = "";
+    String length = "";
+    String mode = "";
 
     int Nb = 4; // size
     int Nr = 10;// 12, or 14; rounds
@@ -373,17 +375,17 @@ class AES {
     }
 
     void encrypt() throws IOException {
-        BufferedReader keyRaw = new BufferedReader(new FileReader("key"));
-        BufferedReader plaintextRaw = new BufferedReader(new FileReader("plaintext"));
+        BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
+        BufferedReader plaintextRaw = new BufferedReader(new FileReader(inputFile));
         System.out.println("Encryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         // InputFile: You'll read in a line, converting from Hex to binary for
         // storage into your state array.
         String line = null;
-        String key = keyRaw.readLine().trim();
+        String key = keyRaw.readLine().toLowerCase().trim();
 
         while ((line = plaintextRaw.readLine()) != null) {
-            line = line.trim();
+            line = line.toLowerCase().trim();
 
             // from hex to binary
             // The input data block is broken into a 4x4 byte array (128-bit
@@ -421,11 +423,15 @@ class AES {
                 System.out.println("");
             }
             // System.out.println("");
-            // System.out.println(Arrays.deepToString(exW));
+            //System.out.println(Arrays.toString(in));
             // System.exit(1);
 
             // FROM HEX TO INT, BYTES
             count = 0;
+            for (int i = 0; i < 4*Nb; i++){
+              in [i] = (byte)Integer.parseInt( line.substring(count, count+2),16 );
+              count +=2;
+            }
             // Apply the AES algorithm to encrypt the string as stored
             Cipher(in, exW);
 
@@ -466,7 +472,7 @@ class AES {
 
             InvShiftRows(state);
             // printArray(state, "After shiftRows: ");
-            
+
             InvSubBytes(state);
             // printArray(state, "After subBytes: ");
 
@@ -480,10 +486,10 @@ class AES {
 
         InvShiftRows(state);
         // printArray(state, "After shiftRows: ");
-        
+
         InvSubBytes(state);
         // printArray(state, "After subBytes: ");
-        
+
         AddRoundKey(state, w, 0);
         // printArray(state, "After addRoundKey(" + 0 + "): ");
 
@@ -492,15 +498,15 @@ class AES {
     }
 
     void decrypt() throws IOException {
-        BufferedReader keyRaw = new BufferedReader(new FileReader("key"));
-        BufferedReader ciphertextRaw = new BufferedReader(new FileReader("plaintext.enc"));
-        System.out.println("\nDecryption with Key Size: " + Nk + " Rounds: " + Nr);
+        BufferedReader keyRaw = new BufferedReader(new FileReader(keyFile));
+        BufferedReader ciphertextRaw = new BufferedReader(new FileReader(inputFile));
+        System.out.println("Decryption with Key Size: " + Nk + " Rounds: " + Nr);
 
         String line = null;
         String key = keyRaw.readLine().trim();
 
         while ((line = ciphertextRaw.readLine()) != null) {
-            line = line.trim();
+            line = line.toLowerCase().trim();
 
             byte[] in = new byte[4 * Nb];
 
@@ -536,14 +542,89 @@ class AES {
     public static void main(String args[]) throws IOException {
         // java AES option keyFile inputFile
         AES sys = new AES();
-        if (args.length > 2) {
-            sys.option = args[0];
-            sys.keyFile = args[1];
-            sys.inputFile = args[2];
+
+        int i = 0, j;
+        String arg;
+        char flag;
+        boolean vflag = false;
+        String outputfile = "";
+
+        while (i < args.length) {
+            arg = args[i++];
+    // use this type of check for "wordy" arguments
+            if (arg.equals("-length")) {
+              if (i < args.length)
+                  sys.length = args[i++];
+            }
+
+            if (arg.equals("-mode")) {
+              if (i < args.length)
+                  sys.mode = args[i++];
+            }
+
+    // use this type of check for arguments that require arguments
+            else if (arg.equals("-key")) {
+                if (i < args.length){
+                    sys.keyFile = args[i++];
+                }
+                else
+                    System.err.println("-key requires a file");
+            }
+
+            else if (arg.equals("-input")) {
+                if (i < args.length)
+                    sys.inputFile = args[i++];
+                else
+                    System.err.println("-output requires an input file");
+            }
+
+
+
+            //java AES option [length] [mode] keyFile inputFile
+            //java AES d key plaintext.enc
+    // use this type of check for a series of flag arguments
+            else {
+              if (arg.length() == 1)
+                switch (arg.charAt(0)) {
+                case 'd':
+                    sys.option = "d";
+                    i++;
+                    break;
+                case 'e':
+                    sys.option = "e";
+                    i++;
+                    break;
+                default:
+                    System.err.println("ParseCmdLine: illegal option ");
+                    break;
+                }
+            }
         }
-        // Nb, Nr, Nk
-        sys.encrypt();
-        sys.decrypt();
+        if (i != args.length)
+            System.err.println("Usage: java AES option [-length] [-key afile] [-input afile]");
+
+        if (sys.length.equals("128")){
+          sys.Nr = 10;
+          sys.Nk = 4;
+        }
+        else if (sys.length.equals("192")){
+          sys.Nr = 12;
+          sys.Nk = 6;
+        }
+        else if (sys.length.equals("256")){
+          sys.Nr = 14;
+          sys.Nk = 8;
+        }
+        else{
+          System.out.println("Key Size is not available");
+          System.exit(1);
+        }
+
+        if (sys.option.equals("e"))
+          sys.encrypt();
+
+        if (sys.option.equals("d"))
+          sys.decrypt();
 
     }
 

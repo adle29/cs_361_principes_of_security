@@ -1,8 +1,4 @@
-UTEID: aa63765; kcv296 ;
-FIRSTNAME: Abraham; Kiankris;
-LASTNAME: Adberstein; Villagonzalo;
-CSACCOUNT: sniper; kiankris;
-EMAIL: aadberstein@gmail.com; kcv@utexas.edu;
+Authors: Abraham Adberstein, Kris Villagonzalo
 
 [Program 4]
 [Description]
@@ -18,7 +14,7 @@ make run4
 
 
 [Finish]
-We finished most of this assignment. We didn't check for keys with larger or lower length than 32. Encryption and Decryption of a plaintext was succesful.
+We finished most of this assignment. We didn't check for keys with larger or lower length than 32. The program can work any key size. The program works on the 128 example  and 256 example. However, for our 3rd and 4th cases it did not work :/. For the 256 example in the website, it does decrypt back correctly but for some reason the ciphertext is not the same.
 
 [Test Case 1]
 
@@ -27,13 +23,9 @@ make run1
 [Timing Information]
 
 Encryption with Key Size: 8 Rounds: 14
-Start Time: 1467439290091ms
-End Time: 1467439290102ms
 Completion Time: 11ms
 
 Decryption with Key Size: 8 Rounds: 14 filename: plaintext.enc
-Start Time: 1467439291422ms
-End Time: 1467439291432ms
 Completion Time: 10ms
 
 [Input Filenames]
@@ -50,13 +42,9 @@ make run2
 [Timing Information]
 
 Encryption with Key Size: 4 Rounds: 10
-Start Time: 1467439314333ms
-End Time: 1467439314343ms
 Completion Time: 10ms
 
 Decryption with Key Size: 4 Rounds: 10 filename: plaintext2.enc
-Start Time: 1467439315677ms
-End Time: 1467439315687ms
 Completion Time: 10ms
 
 [Input Filenames]
@@ -70,13 +58,9 @@ plaintext2.enc.dec
 make run3
 [Timing Information]
 Encryption with Key Size: 8 Rounds: 14
-Start Time: 1467439329174ms
-End Time: 1467439329188ms
 Completion Time: 14ms
 
 Decryption with Key Size: 8 Rounds: 14 filename: plaintext3.enc
-Start Time: 1467439330574ms
-End Time: 1467439330586ms
 Completion Time: 12ms
 
 [Input Filenames]

@@ -1,0 +1,19 @@
+UTEID: aa63765;
+FIRSTNAME: Abraham;
+LASTNAME: Adberstein;
+CSACCOUNT: sniper;
+EMAIL: aadberstein@utexas.edu;
+
+Description:
+
+The main file to run is ThreadedSecureSystem. Inside the file in the "main" function, an instance of the same class is created, named "sys". Two objects and two subjects are created as well by ThreadedSecureSystem class methods. Each subject runs a thread. They system will make a users wait if the object they want to use is being used by another user. The print command also has a lock system to prevent simultaneous printing. The sleep command was also integrated. If a user sees the sleep command in the instruction list, they will sleep and wait until the requested user finishes her list of instructions. To see the sleep command in action, just run
+the program a couple of times to see when a user stops reading instructions until another user finishes theirs. 
+
+How to run the program:
+
+make
+java ThreadedSecureSystem
+
+or
+
+javac ThreadedSecureSystem.java ;  java ThreadedSecureSystem

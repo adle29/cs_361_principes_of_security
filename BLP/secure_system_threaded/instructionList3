@@ -1,0 +1,9 @@
+write hobj
+read hal
+write lobj 10
+read lobj
+write hobj 20
+write lobj 200
+read hobj
+read lobj
+read hobj
